@@ -1,0 +1,25 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx-rate-limit
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./html:/usr/share/nginx/html:ro 
+    restart: always
+  
+  echo-server:
+    image: ealen/echo-server:latest
+    restart: always
+    environment:
+      - ENABLE__ENVIRONMENT=false
+    ports:
+      - 6969:80
+
+  ab:
+    image: marcosvile/ab
+    container_name: apache-benchmark
+    depends_on:
+      - nginx
+
